@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-class TrendifyTheme {
-  static ThemeData get darkTheme {
+class TrendifyBrand {
+  static const String appName = 'Trendify';
+
+  static ThemeData get theme {
     return ThemeData(
       brightness: Brightness.dark,
       primaryColor: Colors.pinkAccent,
@@ -20,6 +22,14 @@ class TrendifyTheme {
         bodyLarge: TextStyle(color: Colors.white),
         bodyMedium: TextStyle(color: Colors.white70),
       ),
+    );
+  }
+
+  static LinearGradient get logoGradient {
+    return const LinearGradient(
+      colors: [Colors.pinkAccent, Colors.cyanAccent],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
     );
   }
 }

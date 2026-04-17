@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
@@ -24,18 +24,20 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Generate Android project files
+        working-directory: flutter_app
+        run: flutter create . --platforms=android --org com.trendify
+
       - name: Install dependencies
-        run: |
-          cd flutter_app
-          flutter pub get
+        working-directory: flutter_app
+        run: flutter pub get
 
       - name: Build APK
-        run: |
-          cd flutter_app
-          flutter build apk --release
+        working-directory: flutter_app
+        run: flutter build apk --release --no-tree-shake-icons
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: trendify-release-apk
           path: flutter_app/build/app/outputs/flutter-apk/app-release.apk

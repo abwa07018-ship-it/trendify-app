@@ -7,37 +7,35 @@ on:
 
 jobs:
   build:
+    name: Build Flutter APK
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Java
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
-          
-      - name: Setup Flutter
+
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.13.0'
           channel: 'stable'
-          
-      - name: Regenerate Platforms
-        working-directory: flutter_app
+
+      - name: Install dependencies
         run: |
-          flutter create . --platforms=android
-          
-      - name: Get dependencies
-        working-directory: flutter_app
-        run: flutter pub get
-        
+          cd flutter_app
+          flutter pub get
+
       - name: Build APK
-        working-directory: flutter_app
-        run: flutter build apk --release
-        
-      - name: Upload APK
+        run: |
+          cd flutter_app
+          flutter build apk --release
+
+      - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: release-apk
+          name: trendify-release-apk
           path: flutter_app/build/app/outputs/flutter-apk/app-release.apk

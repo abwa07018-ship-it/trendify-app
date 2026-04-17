@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/video_model.dart';
+import '../../widgets/trendify_video_player.dart';
 
 class FeedScreen extends StatelessWidget {
   final List<VideoModel> videos;
@@ -16,16 +17,7 @@ class FeedScreen extends StatelessWidget {
         return Stack(
           fit: StackFit.expand,
           children: [
-            Container(
-              color: Colors.black,
-              child: Center(
-                child: Icon(
-                  Icons.play_circle_outline,
-                  size: 64,
-                  color: Colors.white.withOpacity(0.3),
-                ),
-              ),
-            ),
+            TrendifyVideoPlayer(videoUrl: video.videoUrl),
             Positioned(
               bottom: 80,
               left: 16,

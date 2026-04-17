@@ -50,6 +50,12 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
 
+  static const _sampleVideoUrls = [
+    'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+  ];
+
   // Mock feed data for the beta demo
   final List<VideoModel> _mockVideos = List.generate(
     15,
@@ -62,11 +68,11 @@ class _MainShellState extends State<MainShell> {
         'dina_edits', 'rami_cam', 'layla.go', 'khaled_v',
         'mona_ai', 'yusuf_fx', 'rana.art'
       ][i],
-      videoUrl: 'https://example.com/video_$i.mp4',
+      videoUrl: _sampleVideoUrls[i % _sampleVideoUrls.length],
       caption: i % 3 == 0
-          ? 'Check out my Trendify filter! 🔥✨'
+          ? 'Check out my Trendify filter! \uD83D\uDD25\u2728'
           : i % 3 == 1
-              ? 'This AI style is insane 🎨 #trendify'
+              ? 'This AI style is insane \uD83C\uDFA8 #trendify'
               : 'Just vibing today #fyp #fun',
       tags: i % 3 == 0
           ? ['trendify', 'anime', 'trend']

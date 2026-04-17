@@ -2,87 +2,86 @@ import 'package:flutter/material.dart';
 import '../../models/video_model.dart';
 import '../../widgets/trendify_video_player.dart';
 
-class FeedScreen extends StatelessWidget {
-  final List<VideoModel> videos;
+class FeedScreen extends StatefulWidget {
+  const FeedScreen({super.key});
 
-  const FeedScreen({super.key, required this.videos});
+  @override
+  State<FeedScreen> createState() => _FeedScreenState();
+}
+
+class _FeedScreenState extends State<FeedScreen> {
+  late final PageController _pageController;
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
+      controller: _pageController,
       scrollDirection: Axis.vertical,
-      itemCount: videos.length,
+      itemCount: sampleVideos.length,
+      onPageChanged: (index) {
+        setState(() {
+          _currentPage = index;
+        });
+      },
       itemBuilder: (context, index) {
-        final video = videos[index];
+        final video = sampleVideos[index];
         return Stack(
           fit: StackFit.expand,
           children: [
-            TrendifyVideoPlayer(videoUrl: video.videoUrl),
+            TrendifyVideoPlayer(
+              videoUrl: video.url,
+              autoPlay: index == _currentPage,
+            ),
             Positioned(
-              bottom: 80,
               left: 16,
-              right: 72,
+              right: 80,
+              bottom: 16,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        '@${video.username}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      if (video.hasTrendBadge) ...[
-                        const SizedBox(width: 6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Colors.pinkAccent, Colors.cyanAccent],
-                            ),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Text(
-                            'TREND',
-                            style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ],
+                  Text(
+                    video.username,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    video.caption,
+                    video.description,
                     style: const TextStyle(color: Colors.white, fontSize: 14),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 6),
-                  Wrap(
-                    spacing: 6,
-                    children: video.tags
-                        .map((tag) => Text(
-                              '#$tag',
-                              style: const TextStyle(color: Colors.white70, fontSize: 13),
-                            ))
-                        .toList(),
                   ),
                 ],
               ),
             ),
             Positioned(
               right: 12,
-              bottom: 100,
+              bottom: 16,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  _SideButton(icon: Icons.favorite, label: '${video.stats.likes}'),
+                  _ActionButton(icon: Icons.favorite, label: '${video.likes}'),
                   const SizedBox(height: 20),
-                  _SideButton(icon: Icons.comment, label: '${video.stats.comments}'),
+                  _ActionButton(icon: Icons.comment, label: '${video.comments}'),
                   const SizedBox(height: 20),
-                  _SideButton(icon: Icons.share, label: '${video.stats.shares}'),
+                  _ActionButton(icon: Icons.share, label: '${video.shares}'),
                 ],
               ),
             ),
@@ -93,15 +92,14 @@ class FeedScreen extends StatelessWidget {
   }
 }
 
-class _SideButton extends StatelessWidget {
+class _ActionButton extends StatelessWidget {
   final IconData icon;
   final String label;
-
-  const _SideButton({required this.icon, required this.label});
-
+  const _ActionButton({required this.icon, required this.label});
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, color: Colors.white, size: 32),
         const SizedBox(height: 4),
